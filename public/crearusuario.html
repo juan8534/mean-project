@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+  <title>Multas/Node/Express/Mysql</title>
+    <!--Import bootstrap.css-->
+    <link type="text/css" rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+    
+    <!-- custom CSS -->
+
+      <style>
+      @font-face {
+          font-family: 'Roboto';
+          src: url('../resources/fonts/roboto/Roboto-Regular.eot');
+          src: url('../resources/fonts/roboto/Roboto-Regular.woff') format('woff'), 
+          url('../resources/fonts/roboto/Roboto-Regular.ttf') format('truetype');
+          font-style: normal;
+          }
+          
+      body{font-family: "Roboto"}
+          
+      .width-30-pct{
+          width:30%;
+      }
+       
+      .text-align-center{
+          text-align:center;
+      }
+       
+      .margin-bottom-1em{
+          margin-bottom:1em;
+      }
+      </style>
+
+  </head>
+
+    <body>
+  
+        <div class="container" ng-app="users" ng-controller="usersController">
+            <div class="row">
+        
+                <h2 align="center">Crear Usuario</h2>
+                
+                <form id="form-dinminder">
+                        <div class="form-group">
+                            <label for="id_cedulapro" class="control-label">Identificación</label>
+                            <input ng-model="id_cedulapro" type="text" class="form-control"/>	
+                        </div>
+                        <div class="form-group">
+                            <label for="nombre" class="control-label">Nombres</label>
+                            <input ng-model="nombre" type="text" class="form-control" />					
+                        </div>
+                        <div class="form-group">
+                            <label for="apellido" class="control-label">Apellidos</label>
+                            <input ng-model="apellido" type="text" class="form-control"/>					
+                        </div>
+                    <div class="form-group">
+                            <button id="btn-create-product" type="button" class="btn btn-primary pull-right" ng-click="createUser()">Guardar</button>                            
+                            <a class="btn btn-success pull-right" href="index.html">Cancelar</a>
+                    </div>                    
+                </form>
+        </div> <!-- end row -->
+    </body>
+    <!--Import jQuery before bootstrap.js-->
+    <script type="text/javascript" src="../resources/js/jquery-2.2.1.min.js"></script>
+    <script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+    
+    <!-- include angular js -->
+    <script src="../resources/js/angular.min.js"></script>
+    
+    <!-- controller app -->
+    <script src="../resources/js/app.js"></script>
+
+    </body>
+</html>
