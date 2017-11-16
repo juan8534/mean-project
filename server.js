@@ -279,7 +279,7 @@ app.get('/api/list/user', function (req, res) {
 
 });
 
-//DELETE sanction
+//DELETE User
 app.post('/api/delete/user', function (req, res) {
     var id = req.body.id_cedulapro;
     var data = {
@@ -372,6 +372,111 @@ app.put('/api/update/user', function (req, res) {
     }
 });
 
+
+/**
+ * Function Vehicle
+ */
+
+
+// List Vehicle
+app.get('/api/list/vehicles', function (req, res) {
+	console.log("GET Request :: /list");
+	log.info('GET Request :: /list');
+	var data = {
+        "error": 1,
+        "vehicles": ""
+    };
+	
+	pool.getConnection(function (err, connection) {
+		connection.query('SELECT placa,modelo,fecha_modelo, nombre,apellido from propietario, vehiculo where propietario.id_cedulapro = vehiculo.id_propietario;', function (err, rows, fields) {
+		connection.release();
+
+			if (rows.length !== 0 && !err) {
+				data["error"] = 0;
+				data["vehicles"] = rows;
+				res.json(data);
+			} else if (rows.length === 0) {
+			//Error code 2 = no rows in db.
+				data["error"] = 2;
+				data["vehicles"] = 'No hay Vehiculos encontrados..';
+				res.json(data);
+			} else {
+				data["vehicles"] = 'Error al realizar la consulta';
+				res.json(data);
+				console.log('Error al realizar la consulta: ' + err);
+				log.error('Error al realizar la consulta: ' + err);
+			}
+		});
+	
+	});
+
+});
+
+
+ //Create Vehicle
+ app.post('/api/insert/vehicle', function (req, res) {
+    var placa = req.body.placa;
+    var modelo = req.body.modelo;
+	var fecha_modelo = req.body.fecha_modelo;
+	var id_propietario = req.body.id_propietario;
+    var data = {
+        "error": 1,
+        "vehicle": ""
+    };
+	console.log('POST Request :: /insert: ');
+	log.info('POST Request :: /insert: ');
+    if (!!placa && !!modelo && !!fecha_modelo && !!id_propietario) {
+		pool.getConnection(function (err, connection) {
+			connection.query("INSERT INTO vehiculo SET placa = ?, modelo = ?, fecha_modelo = ?, id_propietario = ?",[placa,  modelo, fecha_modelo, id_propietario], function (err, rows, fields) {				
+				if (!!err) {
+					data["vehiculo"] = "Error insertando registro";
+					console.log(err);
+					log.error(err);
+				} else {
+					data["error"] = 0;
+					data["vehiculo"] = "Registro añadido correctamente";
+					console.log("Added: " + [placa, modelo, fecha_modelo, id_propietario]);
+					log.info("Added: " + [placa, modelo, fecha_modelo, id_propietario]);					
+				}
+				res.json(data);
+			});
+        });
+    } else {
+        data["propietario"] = "Todos los campos son obligatorios!!!";
+        res.json(data);
+    }
+});
+
+// Delete vehice
+app.post('/api/delete/vehicle', function (req, res) {
+    var id = req.body.placa;
+    var data = {
+        "error": 1,
+        "vehicle": ""
+    };
+	console.log('DELETE Request :: /delete: ' + id);
+	log.info('DELETE Request :: /delete: ' + id);
+    if (!!id) {
+		pool.getConnection(function (err, connection) {
+			connection.query("DELETE FROM vehiculo WHERE placa=?",[id],function (err, rows, fields) {
+				if (!!err) {
+					data["vehicle"] = "Error deleting data";
+					console.log(err);
+					log.error(err);
+				} else {
+					data["vehicle"] = 0;
+					data["vehicle"] = "Registro eliminado correctamente";
+					console.log("Deleted: " + id);
+					log.info("Deleted: " + id);
+				}
+				res.json(data);
+			});
+		});
+    } else {
+        data["vehicle"] = "Please provide all required data (i.e : id ) & must be a integer";
+        res.json(data);
+    }
+});
 /**
  * Function port
  */
@@ -382,4 +487,4 @@ var server = app.listen(8081, function () {
 
   console.log("La aplicacion funciona por el: " + host + ":" + port);
 
-})
+});

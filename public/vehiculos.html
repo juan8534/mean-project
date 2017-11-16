@@ -43,7 +43,7 @@
   <div class="row">
       <div class="">
           <h2 align="center">Listado de Vehiculos</h2>
-          <a class="btn btn-primary" href="crearusuario.html">Crear Vehiculo</a>
+          <a class="btn btn-primary" href="crearvehiculo.html">Crear Vehiculo</a>
           <!-- table that shows product record list -->
           <table class="table table-striped">
               <thead>
@@ -56,18 +56,18 @@
                       <th class="text-align-center">Acciones</th>                  
                   </tr>
               </thead>
-              <tbody ng-init="getAllUsers()">
-                  <tr ng-repeat="user in datos | filter:search">
-                      <td>{{ user.id_cedulapro}}</td>
-                      <td>{{ user.nombre}}</td>  
-                      <td>{{ user.apellido}}</td>  
-                      <td></td>                
+              <tbody ng-init="getAllVehicles()">
+                  <tr ng-repeat="vehicle in datos | filter:search">
+                      <td>{{ vehicle.placa }}</td>
+                      <td>{{ vehicle.modelo }}</td>  
+                      <td>{{ vehicle.fecha_modelo }}</td>  
+                      <td>{{ vehicle.nombre}}{{" "}}{{vehicle.apellido}}</td>                
                       <td align="center">
                           <a ng-click="readOneUser(user.id_cedulapro)" class="btn btn-success btn-sm" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-edit" aria-hidden="true"> Editar</span></a>                          
-                          <a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirm{{user.id_cedulapro}}"><span class="glyphicon glyphicon-remove" aria-hidden="true"> Eliminar</span></a>
+                          <a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirm{{vehicle.placa}}"><span class="glyphicon glyphicon-remove" aria-hidden="true"> Eliminar</span></a>
                           
                           <!--Are you sure modal-->
-                          <div class="modal" id="confirm{{user.id_cedulapro}}" tabindex="-1" role="dialog">
+                          <div class="modal" id="confirm{{vehicle.placa}}" tabindex="-1" role="dialog">
                             <div class="modal-dialog">
                               <div class="modal-content">
                                 <div class="modal-header">
@@ -79,7 +79,7 @@
                                 </div>
                                 <div class="modal-footer">
                                   <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                                  <button type="button" class="btn btn-danger" ng-click="deleteUser(user.id_cedulapro)" >Aceptar</button>
+                                  <button type="button" class="btn btn-danger" ng-click="deleteVehicle(vehicle.placa)" >Aceptar</button>
                                 </div>
                               </div><!-- /.modal-content -->
                             </div><!-- /.modal-dialog -->

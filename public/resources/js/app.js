@@ -338,5 +338,74 @@ var app = angular.module('vehicles', []);
 
 app.controller('vehiclesController', function ($scope, $http) {
 
+$scope.loader = {
+    loading: false
+};
+
+$scope.getAllVehicles = function () {
+        
+        $scope.loader.loading = true;
+
+
+    //List Vehicles
+    $http.get('api/list/vehicles')
+            .success(function (response) {
+                if (response.error === 2) {
+                    //if error code is returned from node code, then there are no entries in db!
+                    $scope.statustext = "There are currently no products available!";
+                    $scope.loader.loading = false;
+                } else {
+                    $scope.datos = response.vehicles;
+                    //Turn off spinner
+                    $scope.loader.loading = false;
+                    $scope.statustext = "";
+                    }
+                })
+                .error(function (data, status, headers, config) {
+                    $scope.loader.loading = false;
+                    $scope.statustext = "There was an error fetching data, please check database connection!";
+                });
+    };
+
+    //Create Vehicles
+    $scope.createVehicle = function () {
+        
+        $scope.loader.loading = true;
+        
+        $http.post('/api/insert/vehicle', {
+            'placa' : $scope.placa,
+            'modelo' : $scope.modelo,
+            'fecha_modelo' : $scope.fecha_modelo,
+            'id_propietario' : $scope.id_propietario
+        })
+            .success(function (data, status, headers, config) {                
+                window.location.href = '/vehiculos.html';
+            })
+            .error(function (data, status, headers, config) {
+                $scope.loader.loading = false;
+                $scope.modalstatustext = "No se pudieron insertar los datos!!!";
+            });
+    };
+
+    //Delete Users
+    $scope.deleteVehicle = function (id) {
+        $scope.loader.loading = true;
+		
+        $http.post('/api/delete/vehicle', {
+            'placa' : id
+        })
+            .success(function (data, status, headers, config) {
+				//The modal id is the #confirm + id ( d.id ) passed into function.
+				//The confirm modal is unique to the ID (#confirm+ID) of the product.
+                $('#confirm' + id).modal('hide');
+                // refresh the list
+                $scope.getAllVehicles();
+            })
+            .error(function (data, status, headers, config) {
+                $scope.modalstatustext = "Unable to delete data!";
+				// refresh the list
+                $scope.getAllVehicles();
+            });
+    };
 
 });
