@@ -51,6 +51,7 @@
 				<thead>
 					<tr>
 						<!--<th class="text-align-center">ID</th>-->
+						<th class="">Numero de Multa</th>
 						<th class="">Propietario</th>
 						<th class="">Fecha de la multa</th>
 						<th class="">Placa del vehiculo</th>
@@ -61,17 +62,19 @@
 				</thead>
 				<tbody ng-init="getAll()">
 					<tr ng-repeat="d in datos | filter:search">
+							<td>{{ d.id_multa}}</td>
 						<td>{{ d.nombre}}{{" "}}{{d.apellido}}</td>
 						<td>{{ d.fecha_multa |  date : 'yyyy-MM-dd'}}</td>
 						<td>{{ d.id_placa}}</td>
-						<td>{{ d.estado_multa}}</td>
+						<td ng-if="d.estado_multa == 1">Multa sin cancelar</td>
+						<td ng-if="d.estado_multa != 1">Multa Cancelada</td>
 						<td class="text-align-center">{{ d.valor_multa }}</td>
 						<td align="center">
 							<a ng-click="readOne(d.id)" class="btn btn-success btn-sm" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-edit" aria-hidden="true"> Editar</span></a>
-							<a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirm{{d.id}}"><span class="glyphicon glyphicon-remove" aria-hidden="true"> Eliminar</span></a>
+							<a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirm{{d.id_multa}}"><span class="glyphicon glyphicon-remove" aria-hidden="true"> Eliminar</span></a>
 							
 							<!--Are you sure modal-->
-							<div class="modal" id="confirm{{d.id}}" tabindex="-1" role="dialog">
+							<div class="modal" id="confirm{{d.id_multa}}" tabindex="-1" role="dialog">
 							  <div class="modal-dialog">
 								<div class="modal-content">
 								  <div class="modal-header">
@@ -83,7 +86,7 @@
 								  </div>
 								  <div class="modal-footer">
 									<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-									<button type="button" class="btn btn-danger" ng-click="deleteCalificacion(d.id)" >Aceptar</button>
+									<button type="button" class="btn btn-danger" ng-click="deleteSanction(d.id_multa)" >Aceptar</button>
 								  </div>
 								</div><!-- /.modal-content -->
 							  </div><!-- /.modal-dialog -->

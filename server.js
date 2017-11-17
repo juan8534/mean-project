@@ -57,7 +57,7 @@ app.get('/api/list', function (req, res) {
     };
 	
 	pool.getConnection(function (err, connection) {
-		connection.query('SELECT nombre,apellido,fecha_multa,id_placa,estado_multa,valor_multa,id_cedulapro from multa, propietario WHERE propietario.id_cedulapro = multa.id_cedula;', function (err, rows, fields) {
+		connection.query('SELECT id_multa,nombre,apellido,fecha_multa,id_placa,estado_multa,valor_multa,id_cedulapro from multa, propietario WHERE propietario.id_cedulapro = multa.id_cedula;', function (err, rows, fields) {
 			connection.release();
 
 			if (rows.length !== 0 && !err) {
@@ -71,6 +71,74 @@ app.get('/api/list', function (req, res) {
 				res.json(data);
 			} else {
 				data["multa"] = 'Error al realizar la consulta';
+				res.json(data);
+				console.log('Error al realizar la consulta: ' + err);
+				log.error('Error al realizar la consulta: ' + err);
+			}
+		});
+	
+	});
+});
+
+
+//Id's from users
+app.get('/api/list/user', function (req, res) {
+	console.log("GET Request :: /list");
+	log.info('GET Request :: /list');
+	var data = {
+        "error": 1,
+        "user": ""
+    };
+	
+	pool.getConnection(function (err, connection) {
+		connection.query('SELECT id_cedulapro FROM propietario;', function (err, rows, fields) {
+			connection.release();
+
+			if (rows.length !== 0 && !err) {
+				data["error"] = 0;
+				data["user"] = rows;
+				res.json(data);
+			} else if (rows.length === 0) {
+				//Error code 2 = no rows in db.
+				data["error"] = 2;
+				data["user"] = 'No hay calificaciones encontradas..';
+				res.json(data);
+			} else {
+				data["multa"] = 'Error al realizar la consulta';
+				res.json(data);
+				console.log('Error al realizar la consulta: ' + err);
+				log.error('Error al realizar la consulta: ' + err);
+			}
+		});
+	
+	});
+});
+
+
+//Id's from vehicles
+app.get('/api/list/vehicle', function (req, res) {
+	console.log("GET Request :: /list");
+	log.info('GET Request :: /list');
+	var data = {
+        "error": 1,
+        "vehicle": ""
+    };
+	
+	pool.getConnection(function (err, connection) {
+		connection.query('SELECT placa FROM vehiculo;', function (err, rows, fields) {
+			connection.release();
+
+			if (rows.length !== 0 && !err) {
+				data["error"] = 0;
+				data["vehicle"] = rows;
+				res.json(data);
+			} else if (rows.length === 0) {
+				//Error code 2 = no rows in db.
+				data["error"] = 2;
+				data["vehicle"] = 'No hay calificaciones encontradas..';
+				res.json(data);
+			} else {
+				data["vehicle"] = 'Error al realizar la consulta';
 				res.json(data);
 				console.log('Error al realizar la consulta: ' + err);
 				log.error('Error al realizar la consulta: ' + err);
@@ -115,25 +183,25 @@ app.put('/api/update', function (req, res) {
 });
 
 //LIST sanction by ID
-/* app.get('/api/list/:id', function (req, res) {
-	var id = req.params.id;
+/*  app.get('/api/list/:id', function (req, res) {
+	var id = req.params.id_multa;
 	var data = {
         "error": 1,
-        "calificaciones": ""
+        "multa": ""
     };
 	
 	console.log("GET request :: /list/" + id);
 	log.info("GET request :: /list/" + id);
 	pool.getConnection(function (err, connection) {
-		connection.query('SELECT * from calificaciones WHERE id = ?', id, function (err, rows, fields) {
+		connection.query('SELECT * from multas WHERE id_multa = ?', id, function (err, rows, fields) {
 			connection.release();
 			
 			if (rows.length !== 0 && !err) {
 				data["error"] = 0;
-				data["calificaciones"] = rows;
+				data["multa"] = rows;
 				res.json(data);
 			} else {
-				data["calificaciones"] = 'No product Found..';
+				data["multa"] = 'No product Found..';
 				res.json(data);
 				console.log('Error while performing Query: ' + err);
 				log.error('Error while performing Query: ' + err);
@@ -141,7 +209,7 @@ app.put('/api/update', function (req, res) {
 		});
 	
 	});
-}); */ 
+});  */
 
 //INSERT new sanction
 app.post('/api/insert', function (req, res) {
@@ -181,23 +249,23 @@ app.post('/api/insert', function (req, res) {
 
 //DELETE sanction
 app.post('/api/delete', function (req, res) {
-    var id = req.body.id;
+    var id = req.body.id_multa;
     var data = {
         "error": 1,
-        "calificaciones": ""
+        "sanction": ""
     };
 	console.log('DELETE Request :: /delete: ' + id);
 	log.info('DELETE Request :: /delete: ' + id);
     if (!!id) {
 		pool.getConnection(function (err, connection) {
-			connection.query("DELETE FROM calificaciones WHERE id=?",[id],function (err, rows, fields) {
+			connection.query("DELETE FROM multa WHERE id_multa=?",[id],function (err, rows, fields) {
 				if (!!err) {
-					data["calificaciones"] = "Error deleting data";
+					data["sanction"] = "Error deleting data";
 					console.log(err);
 					log.error(err);
 				} else {
-					data["calificaciones"] = 0;
-					data["calificaciones"] = "Registro eliminado correctamente";
+					data["sanction"] = 0;
+					data["sanction"] = "Registro eliminado correctamente";
 					console.log("Deleted: " + id);
 					log.info("Deleted: " + id);
 				}
@@ -211,9 +279,9 @@ app.post('/api/delete', function (req, res) {
 });
 
 
-/**
+/**************************************************************************
  * Functions User
- */
+ **************************************************************************/
 
  //Create User
 app.post('/api/insert/user', function (req, res) {
@@ -249,7 +317,7 @@ app.post('/api/insert/user', function (req, res) {
 });
 
  //List Users
-app.get('/api/list/user', function (req, res) {
+app.get('/api/list/users', function (req, res) {
 	console.log("GET Request :: /list");
 	log.info('GET Request :: /list');
 	var data = {

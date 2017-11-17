@@ -64,6 +64,54 @@ app.controller('multasController', function ($scope, $http) {
             });
     };
 
+    //All ID USer
+    $scope.getAllUser = function () {
+        
+        $scope.loader.loading = true;
+        
+        $http.get("api/list/user")
+            .success(function (response) {
+                if (response.error === 2) {
+					//if error code is returned from node code, then there are no entries in db!
+					$scope.statustext = "There are currently no products available!";
+					$scope.loader.loading = false;
+				} else {
+					$scope.datos = response.user;
+					//Turn off spinner
+					$scope.loader.loading = false;
+					$scope.statustext = "";
+				}
+            })
+            .error(function (data, status, headers, config) {
+                $scope.loader.loading = false;
+                $scope.statustext = "There was an error fetching data, please check database connection!";
+            });
+    };
+
+    //All ID Vehicle
+    $scope.getAllVehicle = function () {
+        
+        $scope.loader.loading = true;
+        
+        $http.get("api/list/vehicle")
+            .success(function (response) {
+                if (response.error === 2) {
+					//if error code is returned from node code, then there are no entries in db!
+					$scope.statustext = "There are currently no products available!";
+					$scope.loader.loading = false;
+				} else {
+					$scope.datos = response.vehicle;
+					//Turn off spinner
+					$scope.loader.loading = false;
+					$scope.statustext = "";
+				}
+            })
+            .error(function (data, status, headers, config) {
+                $scope.loader.loading = false;
+                $scope.statustext = "There was an error fetching data, please check database connection!";
+            });
+    };
+
     // Read product by ID
     $scope.readOne = function (id) {
         // clear modal content
@@ -153,11 +201,11 @@ app.controller('multasController', function ($scope, $http) {
     };
 
     //Delete product
-    $scope.deleteCalificacion = function (id) {
+    $scope.deleteSanction = function (id) {
         $scope.loader.loading = true;
 		
         $http.post('/api/delete', {
-            'id' : id
+            'id_multa' : id
         })
             .success(function (data, status, headers, config) {
 				//The modal id is the #confirm + id ( d.id ) passed into function.
@@ -176,9 +224,9 @@ app.controller('multasController', function ($scope, $http) {
 
 
 });
-/**
+/**********************************************************************
  * Users Controller
- */
+ **********************************************************************/
 var app = angular.module('users', []);
 
 app.controller('usersController', function ($scope, $http) {
@@ -206,7 +254,7 @@ app.controller('usersController', function ($scope, $http) {
         $scope.loader.loading = true;
     
     //List Users
-    $http.get('api/list/user')
+    $http.get('api/list/users')
         .success(function (response) {
             if (response.error === 2) {
 			    //if error code is returned from node code, then there are no entries in db!
@@ -325,9 +373,9 @@ app.controller('usersController', function ($scope, $http) {
 
 });
 
-/**
+/****************************************************************
  * Vehicles Contorller
- */
+ *****************************************************************/
 
 var app = angular.module('vehicles', []);
 

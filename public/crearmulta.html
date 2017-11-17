@@ -51,7 +51,10 @@
                         </div>
                         <div class="form-group">
                             <label for="id_placa" class="control-label">Placa vehiculo</label>
-                            <input ng-model="id_placa" type="text" class="form-control" />					
+                           <!-- <select ng-model="id_placa" ng-init="getAllVehicle()" class="form-control">
+                                <option ng-repeat="d in datos" >{{d.placa}}</option>
+                             </select>-->
+                             <input ng-model="id_placa" type="text" class="form-control"/>					 
                         </div>
                         <div class="form-group">
                             <label for="descripcion_multa" class="control-label">Descripcion de la multa</label>
@@ -61,10 +64,10 @@
                             <label for="valor_multa" class="control-label">Valor Multa</label>
                             <input ng-model="valor_multa" type="text" class="form-control"/>					
                         </div>
-                        <div class="form-group">
+                       <div class="form-group">
                             <label for="id_cedulapro" class="control-label">Cedula propietario</label>
-                            <select ng-model="id_cedulapro" ng-init="getAll()" class="form-control">
-                                <option ng-repeat="d in datos" >{{d.id_cedulapro}}</option>
+                            <select ng-model="id_cedulapro" ng-init="getAllUser()" class="form-control">
+                                <option ng-repeat="usuario in datos" >{{usuario.id_cedulapro}}</option>
                              </select>                            
                         </div>
                     <div class="form-group">
