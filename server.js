@@ -53,11 +53,11 @@ app.get('/api/list', function (req, res) {
 	log.info('GET Request :: /list');
 	var data = {
         "error": 1,
-        "multa": ""
+        "multas": ""
     };
 	
 	pool.getConnection(function (err, connection) {
-		connection.query('SELECT nombre,apellido,fecha_multa,id_placa,estado_multa,valor_multa from multa, propietario WHERE propietario.id_cedulapro = multa.id_cedula;', function (err, rows, fields) {
+		connection.query('SELECT nombre,apellido,fecha_multa,id_placa,estado_multa,valor_multa,id_cedulapro from multa, propietario WHERE propietario.id_cedulapro = multa.id_cedula;', function (err, rows, fields) {
 			connection.release();
 
 			if (rows.length !== 0 && !err) {
@@ -145,33 +145,36 @@ app.put('/api/update', function (req, res) {
 
 //INSERT new sanction
 app.post('/api/insert', function (req, res) {
-    var nocontrol_alumno = req.body.nocontrol_alumno;
-    var materia = req.body.materia;
-    var calificacion = req.body.calificacion;
+    var fecha_multa = req.body.fecha_multa;
+    var id_placa = req.body.id_placa;
+	var descripcion_multa = req.body.descripcion_multa;
+	var valor_multa = req.body.valor_multa;
+	var id_cedulapro = req.body.id_cedulapro;
     var data = {
         "error": 1,
-        "calificaciones": ""
+        "sanctions": ""
     };
 	console.log('POST Request :: /insert: ');
 	log.info('POST Request :: /insert: ');
-    if (!!nocontrol_alumno && !!materia && !!calificacion) {
+    if (!!fecha_multa && !!id_placa && !!descripcion_multa && !!valor_multa && !!id_cedulapro) {
 		pool.getConnection(function (err, connection) {
-			connection.query("INSERT INTO calificaciones SET nocontrol_alumno = ?, materia = ?, calificacion = ?",[nocontrol_alumno,  materia, calificacion], function (err, rows, fields) {
+			connection.query("INSERT INTO multa SET fecha_multa = ?, id_placa = ?, descripcion_multa = ?, valor_multa = ?,id_cedula= ?",
+			[fecha_multa,  id_placa, descripcion_multa,valor_multa,id_cedulapro], function (err, rows, fields) {
 				if (!!err) {
-					data["calificaciones"] = "Error Adding data";
+					data["sanctions"] = "Error Adding data";
 					console.log(err);
 					log.error(err);
 				} else {
 					data["error"] = 0;
-					data["calificaciones"] = "Registro añadido correctamente";
-					console.log("Added: " + [nocontrol_alumno, materia, calificacion]);
-					log.info("Added: " + [nocontrol_alumno, materia, calificacion]);
+					data["sanctions"] = "Registro añadido correctamente";
+					console.log("Added: " + [fecha_multa,  id_placa, descripcion_multa,valor_multa,id_cedulapro]);
+					log.info("Added: " + [fecha_multa,  id_placa, descripcion_multa,valor_multa,id_cedulapro]);
 				}
 				res.json(data);
 			});
         });
     } else {
-        data["calificaciones"] = "Todos los campos son obligatorios!!!";
+        data["sanctions"] = "Todos los campos son obligatorios!!!";
         res.json(data);
     }
 });
@@ -474,6 +477,69 @@ app.post('/api/delete/vehicle', function (req, res) {
 		});
     } else {
         data["vehicle"] = "Please provide all required data (i.e : id ) & must be a integer";
+        res.json(data);
+    }
+});
+
+//Read Vehicle
+app.get('/api/list/vehicle:placa', function (req, res) {
+	var id = req.params.placa;
+	var data = {
+        "error": 1,
+        "vehicle": ""
+    };
+	
+	console.log("GET request :: /list/" + id);
+	log.info("GET request :: /list/" + id);
+	pool.getConnection(function (err, connection) {
+		connection.query('SELECT placa,modelo,fecha_modelo,id_propietario from vehiculo WHERE placa = ?', id, function (err, rows, fields) {
+			connection.release();
+			
+			if (rows.length !== 0 && !err) {
+				data["error"] = 0;
+				data["vehicle"] = rows;
+				res.json(data);
+			} else {
+				data["vehicle"] = 'No user Found..';
+				res.json(data);
+				console.log('Error while performing Query: ' + err);
+				log.error('Error while performing Query: ' + err);
+			}
+		});
+	
+	});
+});
+
+//UPDATE Users
+app.put('/api/update/vehicle', function (req, res) {
+    var id = req.body.placa;
+    var modelo = req.body.modelo;
+	var fecha_modelo = req.body.fecha_modelo;
+	var id_propietario = req.body.id_propietario;    
+    var data = {
+        "error": 1,
+        "vehicle": ""
+    };
+	console.log('PUT Request :: /update: ' + id);
+	log.info('PUT Request :: /update: ' + id);
+    if (!!id && !!modelo && !!fecha_modelo && !!id_propietario) {
+		pool.getConnection(function (err, connection) {
+			connection.query("UPDATE vehiculo SET placa = ?, modelo = ?, fecha_modelo = ?, id_propietario = ? WHERE placa=?",[id,modelo,fecha_modelo ,id_propietario, id], function (err, rows, fields) {
+				if (!!err) {
+					data["vehicle"] = "Error actualizando los datos!!";
+					console.log(err);
+					log.error(err);
+				} else {
+					data["error"] = 0;
+					data["vehicle"] = "Registro actualiado correctamente";
+					console.log("Actualizado: " + [id,modelo,fecha_modelo ,id_propietario]);
+					log.info("Actualizado: " + [id,modelo,fecha_modelo ,id_propietario]);
+				}
+				res.json(data);
+			});
+		});
+    } else {
+        data["vehicle"] = "Porfavor llene todos los caampos (i.e : id, nombre, apellido)";
         res.json(data);
     }
 });

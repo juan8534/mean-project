@@ -105,29 +105,24 @@ app.controller('multasController', function ($scope, $http) {
     };
 
     // Create Product
-    $scope.createCalificacion = function () {
+    $scope.createSanction = function () {
         
         $scope.loader.loading = true;
         
         $http.post('/api/insert', {
-            'nocontrol_alumno' : $scope.nocontrol_alumno,
-            'materia' : $scope.materia,
-            'calificacion' : $scope.calificacion
+            'fecha_multa' : $scope.fecha_multa,
+            'id_placa' : $scope.id_placa,
+            'descripcion_multa' : $scope.descripcion_multa,
+            'valor_multa' : $scope.valor_multa,
+            'id_cedulapro' : $scope.id_cedulapro,
         })
-            .success(function (data, status, headers, config) {
-                // close modal
-                $('#myModal').modal('hide');
-
-                // clear modal content
-                $scope.clearForm();
-
-                // refresh the product list
-                $scope.getAll();
-            })
-            .error(function (data, status, headers, config) {
-                $scope.loader.loading = false;
-                $scope.modalstatustext = "No se pudieron insertar los datos!!!";
-            });
+        .success(function (data, status, headers, config) {                
+            window.location.href = '/index.html';
+        })
+        .error(function (data, status, headers, config) {
+            $scope.loader.loading = false;
+            $scope.modalstatustext = "No se pudieron insertar los datos!!!";
+        });
     };
 	
 	// update product record / save changes
@@ -344,7 +339,19 @@ $scope.loader = {
 
 $scope.getAllVehicles = function () {
         
-        $scope.loader.loading = true;
+    $scope.loader.loading = true;
+
+    $scope.clearForm = function () {
+        $scope.placa = "";
+        $scope.modelo = "";
+        $scope.fecha_modelo = "";  
+        $scope.id_propietario = "";      
+    };
+
+    $scope.hideFormFields = function () {
+        $('#form-dinminder').hide();
+    };
+
 
 
     //List Vehicles
@@ -405,6 +412,65 @@ $scope.getAllVehicles = function () {
                 $scope.modalstatustext = "Unable to delete data!";
 				// refresh the list
                 $scope.getAllVehicles();
+            });
+    };
+
+    //Read One
+    $scope.readOneVehicle = function (id) {
+        
+        // clear modal content
+        $scope.clearForm();
+       // $scope.hideFormFields();
+        
+        // change modal title
+        $('#modal-product-title').text("Editar Vehiculo");
+
+        // show udpate product button
+        $('#btn-update-product').show();
+
+        // show create product button
+        $('#btn-create-product').hide();
+        
+        $scope.loader.loading = true;
+
+        // get id 
+        $http.get('api/list/vehicle' + id)
+                .success(function (data, status, headers, config) {                
+                    // put the values in form
+                    $scope.placa = data.vehicle[0].placa;
+                    $scope.modelo = data.vehicle[0].modelo;
+                    $scope.fecha_modelo = data.vehicle[0].fecha_modelo;                
+                    $scope.id_propietario = data.vehicle[0].id_propietario;
+
+                    // show modal
+                    $('#myModal').modal('show');
+                    //Turn off spinner
+                    $scope.loader.loading = false;
+                })
+                .error(function (data, status, headers, config) {
+                    //Turn of spinner & display error
+                    $scope.loader.loading = false;
+                    $scope.modalstatustext = "There was an error fetching data";
+                });
+    };
+
+    // update product record / save changes
+    $scope.updateVehicle = function () {
+        
+        $scope.loader.loading = true;
+        
+        $http.put('/api/update/vehicle', {
+            'placa' : $scope.placa,
+            'modelo' : $scope.modelo,
+            'fecha_modelo' : $scope.fecha_modelo,
+            'id_propietario' : $scope.id_propietario            
+        })
+            .success(function (data, status, headers, config) {
+                window.location.href = '/vehiculos.html';                
+            })
+            .error(function (data, status, headers, config) {
+                $scope.loader.loading = false;
+                $scope.modalstatustext = "Unable to Update data!";
             });
     };
 

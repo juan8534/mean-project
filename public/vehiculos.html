@@ -63,7 +63,7 @@
                       <td>{{ vehicle.fecha_modelo }}</td>  
                       <td>{{ vehicle.nombre}}{{" "}}{{vehicle.apellido}}</td>                
                       <td align="center">
-                          <a ng-click="readOneUser(user.id_cedulapro)" class="btn btn-success btn-sm" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-edit" aria-hidden="true"> Editar</span></a>                          
+                          <a ng-click="readOneVehicle(vehicle.placa)" class="btn btn-success btn-sm" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-edit" aria-hidden="true"> Editar</span></a>                          
                           <a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirm{{vehicle.placa}}"><span class="glyphicon glyphicon-remove" aria-hidden="true"> Eliminar</span></a>
                           
                           <!--Are you sure modal-->
@@ -99,24 +99,30 @@
           <h4 class="modal-title" id="modal-product-title">Modal title</h4>
         </div>
         <div class="modal-body">        
-                <form id="form-dinminder">
-                        <div class="form-group">
-                            <label for="id_cedulapro" class="control-label">Identificación</label>
-                            <input ng-model="id_cedulapro" type="text" class="form-control" value="{{user.id_cedulapro}}"/>	
-                        </div>
-                        <div class="form-group">
-                            <label for="nombre" class="control-label">Nombres</label>
-                            <input ng-model="nombre" type="text" class="form-control" value="{{user.nombre}}"/>					
-                        </div>
-                        <div class="form-group">
-                            <label for="apellido" class="control-label">Apellidos</label>
-                            <input ng-model="apellido" type="text" class="form-control" value="{{user.apellido}}"/>					
-                        </div>                                                              
-                </form>		
+            <form id="form-dinminder">
+                <div class="form-group">
+                    <label for="placa" class="control-label">Placa</label>
+                    <input ng-model="placa" type="text" class="form-control"/>	
+                </div>
+                <div class="form-group">
+                    <label for="modelo" class="control-label">Modelo</label>
+                    <input ng-model="modelo" type="text" class="form-control" />					
+                </div>
+                <div class="form-group">
+                    <label for="fecha_modelo" class="control-label">Año</label>
+                    <input ng-model="fecha_modelo" type="text" class="form-control"/>					
+                </div>
+                <div class="form-group">
+                    <label for="id_propietario" class="control-label">Cedula propietario</label>
+                    <select ng-model="id_propietario" ng-init="getAllVehicles()" class="form-control">
+                        <option ng-repeat="vehicle in datos" >{{vehicle.id_propietario}}</option>
+                     </select>                            
+                </div>                                
+            </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>                                  
-          <button id="btn-update-product" type="button" class="btn btn-warning" ng-click="updateUser()">Guardar cambios</button>
+          <button id="btn-update-product" type="button" class="btn btn-warning" ng-click="updateVehicle()">Guardar cambios</button>
         </div>
       </div>
     </div>
