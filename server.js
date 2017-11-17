@@ -388,7 +388,7 @@ app.get('/api/list/vehicles', function (req, res) {
     };
 	
 	pool.getConnection(function (err, connection) {
-		connection.query('SELECT placa,modelo,fecha_modelo, nombre,apellido from propietario, vehiculo where propietario.id_cedulapro = vehiculo.id_propietario;', function (err, rows, fields) {
+		connection.query('SELECT placa,modelo,fecha_modelo, nombre,apellido, id_propietario from propietario, vehiculo where propietario.id_cedulapro = vehiculo.id_propietario;', function (err, rows, fields) {
 		connection.release();
 
 			if (rows.length !== 0 && !err) {

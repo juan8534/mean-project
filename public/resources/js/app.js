@@ -386,7 +386,7 @@ $scope.getAllVehicles = function () {
                 $scope.modalstatustext = "No se pudieron insertar los datos!!!";
             });
     };
-
+    
     //Delete Users
     $scope.deleteVehicle = function (id) {
         $scope.loader.loading = true;
