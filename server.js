@@ -578,6 +578,70 @@ app.get('/api/list/vehicle:placa', function (req, res) {
 	});
 });
 
+
+app.get('/api/list/user', function (req, res) {
+	console.log("GET Request :: /list");
+	log.info('GET Request :: /list');
+	var data = {
+        "error": 1,
+        "user": ""
+    };
+	
+	pool.getConnection(function (err, connection) {
+		connection.query('SELECT id_cedulapro FROM propietario;', function (err, rows, fields) {
+			connection.release();
+
+			if (rows.length !== 0 && !err) {
+				data["error"] = 0;
+				data["user"] = rows;
+				res.json(data);
+			} else if (rows.length === 0) {
+				//Error code 2 = no rows in db.
+				data["error"] = 2;
+				data["user"] = 'No hay calificaciones encontradas..';
+				res.json(data);
+			} else {
+				data["multa"] = 'Error al realizar la consulta';
+				res.json(data);
+				console.log('Error al realizar la consulta: ' + err);
+				log.error('Error al realizar la consulta: ' + err);
+			}
+		});
+	
+	});
+});
+
+app.get('/api/list/usuarios', function (req, res) {
+	console.log("GET Request :: /list");
+	log.info('GET Request :: /list');
+	var data = {
+        "error": 1,
+        "usuario": ""
+    };
+	
+	pool.getConnection(function (err, connection) {
+		connection.query('SELECT id_cedulapro FROM propietario;', function (err, rows, fields) {
+			connection.release();
+
+			if (rows.length !== 0 && !err) {
+				data["error"] = 0;
+				data["usuario"] = rows;
+				res.json(data);
+			} else if (rows.length === 0) {
+				//Error code 2 = no rows in db.
+				data["error"] = 2;
+				data["usuario"] = 'No hay calificaciones encontradas..';
+				res.json(data);
+			} else {
+				data["usuario"] = 'Error al realizar la consulta';
+				res.json(data);
+				console.log('Error al realizar la consulta: ' + err);
+				log.error('Error al realizar la consulta: ' + err);
+			}
+		});
+	
+	});
+});
 //UPDATE Users
 app.put('/api/update/vehicle', function (req, res) {
     var id = req.body.placa;

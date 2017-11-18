@@ -399,9 +399,7 @@ $scope.getAllVehicles = function () {
     $scope.hideFormFields = function () {
         $('#form-dinminder').hide();
     };
-
-
-
+    
     //List Vehicles
     $http.get('api/list/vehicles')
             .success(function (response) {
@@ -421,6 +419,34 @@ $scope.getAllVehicles = function () {
                     $scope.statustext = "There was an error fetching data, please check database connection!";
                 });
     };
+
+
+    $scope.getAllUsuarios = function () {
+        
+        $scope.loader.loading = true;
+    
+    //List Users
+
+
+    $http.get('api/list/usuarios')
+        .success(function (response) {
+            if (response.error === 2) {
+			    //if error code is returned from node code, then there are no entries in db!
+				$scope.statustext = "There are currently no products available!";
+				$scope.loader.loading = false;
+			} else {
+				$scope.datos = response.usuario;
+				//Turn off spinner
+				$scope.loader.loading = false;
+				$scope.statustext = "";
+				}
+            })
+            .error(function (data, status, headers, config) {
+                $scope.loader.loading = false;
+                $scope.statustext = "There was an error fetching data, please check database connection!";
+            });
+    };
+
 
     //Create Vehicles
     $scope.createVehicle = function () {

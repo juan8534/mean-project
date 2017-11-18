@@ -53,6 +53,7 @@
 						<!--<th class="text-align-center">ID</th>-->
 						<th class="">Numero de Multa</th>
 						<th class="">Propietario</th>
+						<th class="">Cedula</th>
 						<th class="">Fecha de la multa</th>
 						<th class="">Placa del vehiculo</th>
 						<th class="">Estado de la multa</th>
@@ -61,9 +62,12 @@
 					</tr>
 				</thead>
 				<tbody ng-init="getAll()">
+					<h5>Buscar Multa...</h5>	
+					<input ng-model="search" class="form-control">						
 					<tr ng-repeat="d in datos | filter:search">
 							<td>{{ d.id_multa}}</td>
 						<td>{{ d.nombre}}{{" "}}{{d.apellido}}</td>
+						<td>{{ d.id_cedulapro}}</td>
 						<td>{{ d.fecha_multa |  date : 'yyyy-MM-dd'}}</td>
 						<td>{{ d.id_placa}}</td>
 						<td ng-if="d.estado_multa == 1">Multa sin cancelar</td>
